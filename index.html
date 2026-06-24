@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taskly — Gerenciamento Premium de Tarefas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark-premium">
+
+  <!-- Background animado -->
+  <div class="bg-layer" aria-hidden="true">
+    <canvas id="particles"></canvas>
+    <div class="gradient-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+  </div>
+
+  <!-- Cursor glow -->
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- Loading -->
+  <div id="app-loader" class="loader">
+    <div class="loader-logo">Task<span>ly</span></div>
+    <div class="loader-bar"><div class="loader-progress"></div></div>
+    <p class="loader-text">Carregando sua produtividade...</p>
+  </div>
+
+  <!-- App -->
+  <div class="app" id="app" hidden>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">Task<span>ly</span></div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Recolher sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="tasks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <span>Minhas Tarefas</span>
+        </button>
+        <button class="nav-item" data-view="projects">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          <span>Projetos</span>
+        </button>
+        <button class="nav-item" data-view="calendar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Calendário</span>
+        </button>
+        <button class="nav-item" data-view="goals">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <span>Metas</span>
+        </button>
+        <button class="nav-item" data-view="stats">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Estatísticas</span>
+        </button>
+        <button class="nav-item" data-view="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          <span>Configurações</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-avatar">P</div>
+        <div class="user-info">
+          <strong id="sidebarUserName">Pedro</strong>
+          <small>Premium</small>
+        </div>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="search-global">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="globalSearch" placeholder="Buscar tarefas... ( / )" autocomplete="off" />
+        </div>
+        <button class="btn btn-primary btn-sm" id="quickAddBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nova Tarefa
+        </button>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section class="view active" id="view-dashboard">
+        <div class="view-header">
+          <div>
+            <h1 id="greeting">Bom dia, Pedro</h1>
+            <p class="view-sub" id="currentDate"></p>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="dashboardStats"></div>
+
+        <div class="dashboard-grid">
+          <div class="card glass">
+            <h3>Produtividade Semanal</h3>
+            <div class="chart-bars" id="weeklyChart"></div>
+          </div>
+          <div class="card glass">
+            <h3>Progresso dos Projetos</h3>
+            <div id="projectProgress"></div>
+          </div>
+          <div class="card glass">
+            <h3>Próximas Tarefas</h3>
+            <div id="upcomingTasks"></div>
+          </div>
+          <div class="card glass">
+            <h3>Evolução Mensal</h3>
+            <div class="chart-line-wrap">
+              <canvas id="monthlyChart" height="160"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TASKS -->
+      <section class="view" id="view-tasks">
+        <div class="view-header">
+          <div>
+            <h1>Minhas Tarefas</h1>
+            <p class="view-sub">Organize, filtre e arraste no Kanban</p>
+          </div>
+          <div class="view-actions">
+            <button class="btn btn-ghost btn-sm" id="toggleFiltersBtn">Filtros</button>
+            <div class="view-toggle">
+              <button class="toggle-btn active" data-layout="kanban">Kanban</button>
+              <button class="toggle-btn" data-layout="list">Lista</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filters-panel glass" id="filtersPanel" hidden>
+          <div class="filters-grid">
+            <div class="field">
+              <label>Categoria</label>
+              <select id="filterCategory"><option value="">Todas</option></select>
+            </div>
+            <div class="field">
+              <label>Prioridade</label>
+              <select id="filterPriority">
+                <option value="">Todas</option>
+                <option value="low">Baixa</option>
+                <option value="medium">Média</option>
+                <option value="high">Alta</option>
+                <option value="urgent">Urgente</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Projeto</label>
+              <select id="filterProject"><option value="">Todos</option></select>
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select id="filterStatus">
+                <option value="">Todos</option>
+                <option value="pending">Pendente</option>
+                <option value="in-progress">Em andamento</option>
+                <option value="review">Revisão</option>
+                <option value="done">Concluído</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Data</label>
+              <input type="date" id="filterDate" />
+            </div>
+            <button class="btn btn-ghost btn-sm" id="clearFilters">Limpar</button>
+          </div>
+        </div>
+
+        <div id="tasksKanban" class="kanban"></div>
+        <div id="tasksList" class="tasks-list" hidden></div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section class="view" id="view-projects">
+        <div class="view-header">
+          <div>
+            <h1>Projetos</h1>
+            <p class="view-sub">Gerencie seus projetos e acompanhe o progresso</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="newProjectBtn">+ Novo Projeto</button>
+        </div>
+        <div class="projects-grid" id="projectsGrid"></div>
+      </section>
+
+      <!-- CALENDAR -->
+      <section class="view" id="view-calendar">
+        <div class="view-header">
+          <div>
+            <h1>Calendário</h1>
+            <p class="view-sub">Visualize prazos e entregas</p>
+          </div>
+          <div class="calendar-nav">
+            <button class="btn btn-ghost btn-sm" id="calPrev">‹</button>
+            <span id="calMonthLabel"></span>
+            <button class="btn btn-ghost btn-sm" id="calNext">›</button>
+          </div>
+        </div>
+        <div class="calendar-layout">
+          <div class="card glass calendar-grid-wrap">
+            <div class="calendar-weekdays">
+              <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+          <div class="card glass calendar-day-panel">
+            <h3 id="calDayTitle">Selecione um dia</h3>
+            <div id="calDayTasks"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GOALS -->
+      <section class="view" id="view-goals">
+        <div class="view-header">
+          <div>
+            <h1>Metas</h1>
+            <p class="view-sub">Defina e acompanhe suas metas de produtividade</p>
+          </div>
+        </div>
+        <div class="goals-grid" id="goalsGrid"></div>
+      </section>
+
+      <!-- STATS -->
+      <section class="view" id="view-stats">
+        <div class="view-header">
+          <div>
+            <h1>Estatísticas</h1>
+            <p class="view-sub">Análise completa da sua produtividade</p>
+          </div>
+        </div>
+        <div class="stats-grid" id="statsOverview"></div>
+        <div class="dashboard-grid">
+          <div class="card glass">
+            <h3>Taxa de Conclusão</h3>
+            <div class="donut-wrap" id="completionDonut"></div>
+          </div>
+          <div class="card glass">
+            <h3>Categorias Mais Usadas</h3>
+            <div id="topCategories"></div>
+          </div>
+          <div class="card glass">
+            <h3>Dias Mais Produtivos</h3>
+            <div id="productiveDays"></div>
+          </div>
+          <div class="card glass">
+            <h3>Projetos Mais Ativos</h3>
+            <div id="activeProjects"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings">
+        <div class="view-header">
+          <div>
+            <h1>Configurações</h1>
+            <p class="view-sub">Personalize sua experiência Taskly</p>
+          </div>
+        </div>
+        <div class="settings-grid">
+          <div class="card glass">
+            <h3>Perfil</h3>
+            <div class="field">
+              <label>Seu nome</label>
+              <input type="text" id="settingName" placeholder="Seu nome" />
+            </div>
+          </div>
+          <div class="card glass">
+            <h3>Aparência</h3>
+            <div class="field">
+              <label>Tema</label>
+              <select id="settingTheme">
+                <option value="dark">Modo Escuro</option>
+                <option value="dark-premium">Modo Escuro Premium</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Cor principal</label>
+              <input type="color" id="settingPrimary" value="#6C63FF" />
+            </div>
+            <div class="field">
+              <label>Cor secundária</label>
+              <input type="color" id="settingSecondary" value="#38BDF8" />
+            </div>
+            <div class="field">
+              <label>Intensidade dos efeitos: <span id="glowValue">1</span></label>
+              <input type="range" id="settingGlow" min="0" max="2" step="0.1" value="1" />
+            </div>
+            <button class="btn btn-ghost" id="resetSettings">Restaurar Padrão</button>
+          </div>
+          <div class="card glass">
+            <h3>Categorias</h3>
+            <div class="field inline">
+              <input type="text" id="newCategoryName" placeholder="Nova categoria" />
+              <input type="color" id="newCategoryColor" value="#6C63FF" />
+              <button class="btn btn-primary btn-sm" id="addCategoryBtn">Adicionar</button>
+            </div>
+            <div id="categoriesList"></div>
+          </div>
+          <div class="card glass">
+            <h3>Tags</h3>
+            <div class="field inline">
+              <input type="text" id="newTagName" placeholder="Nova tag" />
+              <button class="btn btn-primary btn-sm" id="addTagBtn">Adicionar</button>
+            </div>
+            <div id="tagsList" class="tags-wrap"></div>
+          </div>
+          <div class="card glass">
+            <h3>Metas</h3>
+            <div class="field">
+              <label>Meta diária (tarefas)</label>
+              <input type="number" id="goalDailyTarget" min="1" />
+            </div>
+            <div class="field">
+              <label>Meta semanal (tarefas)</label>
+              <input type="number" id="goalWeeklyTarget" min="1" />
+            </div>
+            <div class="field">
+              <label>Meta mensal (tarefas)</label>
+              <input type="number" id="goalMonthlyTarget" min="1" />
+            </div>
+            <button class="btn btn-primary btn-sm" id="saveGoalsBtn">Salvar Metas</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal Tarefa -->
+  <dialog class="modal" id="taskModal">
+    <form id="taskForm" class="modal-content glass">
+      <div class="modal-header">
+        <h2 id="taskModalTitle">Nova Tarefa</h2>
+        <button type="button" class="modal-close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="taskId" />
+        <div class="field">
+          <label>Título *</label>
+          <input type="text" id="taskTitle" required placeholder="Ex: Prova de Matemática" />
+        </div>
+        <div class="field">
+          <label>Descrição</label>
+          <textarea id="taskDescription" rows="3" placeholder="Detalhes da tarefa..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Prioridade</label>
+            <select id="taskPriority">
+              <option value="low">Baixa</option>
+              <option value="medium" selected>Média</option>
+              <option value="high">Alta</option>
+              <option value="urgent">Urgente</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Categoria</label>
+            <select id="taskCategory"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Projeto</label>
+            <select id="taskProject"><option value="">Nenhum</option></select>
+          </div>
+          <div class="field">
+            <label>Prazo</label>
+            <input type="date" id="taskDueDate" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Status</label>
+            <select id="taskStatus">
+              <option value="pending">Pendente</option>
+              <option value="in-progress">Em andamento</option>
+              <option value="review">Revisão</option>
+              <option value="done">Concluído</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Cor personalizada</label>
+            <input type="color" id="taskColor" value="#6C63FF" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Tags</label>
+          <div id="taskTagsSelect" class="tags-select"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Tarefa</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal Projeto -->
+  <dialog class="modal" id="projectModal">
+    <form id="projectForm" class="modal-content glass">
+      <div class="modal-header">
+        <h2 id="projectModalTitle">Novo Projeto</h2>
+        <button type="button" class="modal-close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="projectId" />
+        <div class="field">
+          <label>Nome *</label>
+          <input type="text" id="projectName" required />
+        </div>
+        <div class="field">
+          <label>Descrição</label>
+          <textarea id="projectDescription" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label>Cor</label>
+          <input type="color" id="projectColor" value="#6C63FF" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="deleteProjectBtn" hidden>Excluir</button>
+        <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Projeto</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
